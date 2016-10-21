@@ -5,6 +5,7 @@
 package javalab;
 
 import java.io.IOException;
+import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -40,9 +41,12 @@ public class Javlab1 {
         // a="(1+2)2";
         // !simplify a=1.001 b=1.5 c=1.333 d=0 f=1 g=2 h=10
         // !simplify a=1.001 b=1.5 c=1.333 g=2 h=10 //这个会出现误差，不要拿这个颜演示
+        Scanner in = new Scanner(System.in);
         while (!test.syntaxCheck(a)) {
             System.out.println("Syntax error! Input again");
-            a = MyInput.readString();
+//            a = MyInput.readString();
+            
+            a=in.nextLine();
         }
         a = test.initialize(a);
         System.out.println(a); // NOPMD by 5DSGOODWIN on 16-10-21 下午12:42
@@ -55,7 +59,7 @@ public class Javlab1 {
         String command = "";
 
         while (true) {
-            command = MyInput.readString();
+            command = in.nextLine();//MyInput.readString();
             if (command
                     .matches("^!simplify[\\s]+([a-zA-Z]=[-0-9.]+[\\s]*)+$")) {
                 System.out.println("Simplify:");

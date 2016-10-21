@@ -4,6 +4,7 @@
 
 package javalab;
 
+import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -30,8 +31,9 @@ public class Javlab1 {
      * 
      * @param args
      *            string
+     * @throws IOException 
      */
-    public static void main(final String[] args) {
+    public static void main(final String[] args) throws IOException {
         String a = "a+b+c"; // 之前导致bug的原因是100这个maxNumber设置的太小了
         Javlab1 test = new Javlab1();
         // a=myinput.read_string();
@@ -40,10 +42,10 @@ public class Javlab1 {
         // !simplify a=1.001 b=1.5 c=1.333 g=2 h=10 //这个会出现误差，不要拿这个颜演示
         while (!test.syntaxCheck(a)) {
             System.out.println("Syntax error! Input again");
-            a = myinput.read_string();
+            a = MyInput.readString();
         }
         a = test.initialize(a);
-        System.out.println(a);
+        System.out.println(a); // NOPMD by 5DSGOODWIN on 16-10-21 下午12:42
         test.stringToArray(a);
 
         System.out.println("Simplified expression:");
@@ -53,7 +55,7 @@ public class Javlab1 {
         String command = "";
 
         while (true) {
-            command = myinput.read_string();
+            command = MyInput.readString();
             if (command
                     .matches("^!simplify[\\s]+([a-zA-Z]=[-0-9.]+[\\s]*)+$")) {
                 System.out.println("Simplify:");
@@ -111,7 +113,7 @@ public class Javlab1 {
         check[checkIndex++] = Pattern.compile("^.*\\^[^0-9].*$"); // ^后不是数字的情况
 
         for (int i = 0; i < checkIndex; i++) {
-            Matcher test = check[i].matcher(a);
+            final Matcher test = check[i].matcher(a);
             if (test.find()) {
                 return false;
             }
@@ -153,7 +155,7 @@ public class Javlab1 {
 
         a = a.replaceAll("([^0-9])\\.", "$10."); // 小数点前面的0的补充
 
-        a = a.replaceAll("([a-zA-Z0-9])([A-Za-z])", "$1*$2"); // 字母之间的乘号
+        a = a.replaceAll("([a-zA-Z0-9])([A-Za-z])", "$1*$2"); // 字母之间的乘号 // NOPMD by 5DSGOODWIN on 16-10-21 下午12:47
         a = a.replaceAll("([a-zA-Z0-9])([A-Za-z])", "$1*$2"); // 因正则表达式的特性，此处要两次
 
         a = a.replaceAll("([a-zA-Z])([0-9])", "$1*$2"); // a4将补充为a*4
@@ -165,11 +167,12 @@ public class Javlab1 {
         a = a.replaceAll("\\)\\(", ")*("); // 括号乘括号
         System.out.println(a);
         a = a.replace("-", "+%*"); // 用%代表-1,将其视为一个新的数字
-
+        
+        StringBuffer buffer1 = new StringBuffer();
         while (a.contains("(") || a.contains("^")) {
             String oldString = "";
             oldString = oldString.concat(a);
-            StringBuffer buffer1 = new StringBuffer();
+//            StringBuffer buffer1 = new StringBuffer();
             Pattern regexTest1 = Pattern.compile(
                     "(\\([^()]+\\)" + "|[0-9.]+|[a-zA-Z]+)\\^([.0-9]+)");
             Matcher regexTest1Matcher = regexTest1.matcher(a);
@@ -379,7 +382,7 @@ public class Javlab1 {
      * @param command1
      *            string
      */
-    final String simplify(final String command1) { // 矩阵中进行化简运算
+    final String simplify(String command1) { // 矩阵中进行化简运算
 
         String command = command1;
         int[][] matrixCalculate = new int[maxNumber][bigNumber];
@@ -427,9 +430,7 @@ public class Javlab1 {
         int[][] matrixCalculate = new int[maxNumber][bigNumber];
         double[] coefficientCalculate = new double[maxNumber];
         for (int i = 0; i < maxNumber; i++) {
-            coefficientCalculate[i] = coefficientArray[i];
-        }
-        for (int i = 0; i < maxNumber; i++) {
+        	coefficientCalculate[i] = coefficientArray[i];
             for (int j = 0; j < bigNumber; j++) {
                 matrixCalculate[i][j] = exponentMatrix[i][j];
             }
